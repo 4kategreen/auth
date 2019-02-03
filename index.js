@@ -1,4 +1,5 @@
 const http = require('http');
+const auth = require('./auth');
 
 http
   .createServer((req, res) => {
