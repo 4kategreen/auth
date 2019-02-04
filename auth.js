@@ -14,6 +14,13 @@ let handler = (req, res) => {
   }
 };
 
+let logout = (req, res) => {
+  return {
+    body: '<p>Destroy existing token</p>',
+    status: 200
+  }
+};
+
 let status = (params) => {
   let token = params.getAll('token');
   if (token.length === 1) {
@@ -26,13 +33,6 @@ let status = (params) => {
     status: 200
   }
 };
-
-let logout = (req, res) => {
-  return {
-    body: '<p>Destroy existing token</p>',
-    status: 200
-  }
-}
 
 module.exports = {
   handler: handler,
