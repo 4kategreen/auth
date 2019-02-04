@@ -1,22 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
-
-const db = new sqlite3.Database('./db/basic.db', (err) => {
-  if (err) {
-  return console.error(err.message);
-  }
-  console.log('Connected to the basic database.');
-});
-
 let handler = (req, res) => {
   return {
     body: '<p>Make new token</p>',
-    status: 200
-  }
-};
-
-let logout = (req, res) => {
-  return {
-    body: '<p>Destroy existing token</p>',
     status: 200
   }
 };
@@ -36,8 +20,7 @@ let status = (params) => {
 
 module.exports = {
   handler: handler,
-  status: status,
-  logout: logout
+  status: status
 }
 
 /***
@@ -47,21 +30,16 @@ purpose: given valid login credentials, create token
   return true
     create token
     send token
-    write token to db
     200
   return false
     401
 GET /auth
 purpose: compare token to db so app can verify login
-  compare token to database
+  assess token
   return true
     continue on your way
     200
   return false
     redirect
     401
-DELETE /auth
-  destroy login
-    delete token
-    200
 ***/
