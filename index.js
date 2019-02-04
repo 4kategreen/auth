@@ -1,5 +1,5 @@
-const http =  require('http');
-const url =   require('url');
+const http =        require('http'),
+      url =         require('url');
 
 const auth =  require('./auth');
 
@@ -16,11 +16,15 @@ http
         body.push(chunk);
       })
       .on('end', () => {
-        console.log(`${req.method} request received to ${req.url}`);
+        let requestedURL = new URL(req.url, `http://${req.headers.host}`),
+            endpoint = requestedURL.pathname,
+            params = requestedURL.searchParams;
+
+        console.log(`${req.method} request received to ${endpoint}`);
         body = Buffer.concat(body),toString();
 
         let result = {
-          body:`<h2>${req.method} ${req.url}</h2>`,
+          body:`<h2>${req.method} ${endpoint}</h2>`,
           status: 404
         }
 
@@ -28,21 +32,19 @@ http
           console.error(err);
         });
 
-        switch (req.url) {
+        switch (endpoint) {
           case '/auth':
             switch (req.method) {
               case 'POST':
                 result = auth.handler(req, res);
                 break;
               case 'GET':
-                result = auth.status(req, res);
+                result = auth.status(params);
                 break;
               case 'DELETE':
                 result = auth.logout(req, res);
                 break;
             }
-            break;
-          default:
             break;
         }
 

@@ -1,27 +1,33 @@
 const sqlite3 = require('sqlite3').verbose();
 
-let db = new sqlite3.Database(':memory:', (err) => {
+const db = new sqlite3.Database('./db/basic.db', (err) => {
   if (err) {
   return console.error(err.message);
   }
-  console.log('Connected to the in-memory SQlite database.');
+  console.log('Connected to the basic database.');
 });
 
-let handler = () => {
+let handler = (req, res) => {
   return {
     body: '<p>Make new token</p>',
     status: 200
   }
 };
 
-let status = () => {
+let status = (params) => {
+  let token = params.getAll('token');
+  if (token.length === 1) {
+    // query the database
+  } else {
+    // error ffs
+  }
   return {
-    body: '<p>Get existing token</p>',
+    body: `<p>Verify existing token: ${params}</p>`,
     status: 200
   }
 };
 
-let logout = () => {
+let logout = (req, res) => {
   return {
     body: '<p>Destroy existing token</p>',
     status: 200
