@@ -13,7 +13,7 @@ http
         console.error(err);
       })
       .on('end', () => {
-        let requestedURL = new URL(req.url, `http://${req.headers.host}`),
+        let requestedURL = new URL(req.url, `http://${req.headers.host}`), // this sucks
             endpoint = requestedURL.pathname,
             params = requestedURL.searchParams;
 
