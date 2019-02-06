@@ -1,1 +1,4 @@
 node_modules/
+
+tests/logs/
+tests/pacts/

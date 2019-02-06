@@ -1,11 +1,12 @@
 {
   "name": "auth",
   "version": "0.0.1",
-  "description": "jwt-based auth system",
+  "description": "jwt auth system",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "pact": "export NODE_ENV=pact && jest --testRegex \"/*(.test.pact.js)\" --runInBand --setupFiles ./tests/pactSetup.js --setupFilesAfterEnv ./tests/pactTestWrapper.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
     "crypto-js": "^3.1.9-1"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^7.2.0",
+    "axios": "^0.18.0",
     "jest": "^24.1.0",
     "jsverify": "^0.8.4"
   }
