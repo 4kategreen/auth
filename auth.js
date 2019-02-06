@@ -27,14 +27,14 @@ let status = (params) => {
 
 let returnSuccess = (token) => {
   res.writeHead(200, {
-    'content-type': 'text/html',
+    'content-type': 'application/json',
     'authorization': token
   });
 };
 
 let returnFail = () => {
   res.writeHead(401, {
-    'content-type': 'text/html'
+    'content-type': 'application/json'
   });
 };
 
