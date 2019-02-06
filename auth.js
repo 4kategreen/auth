@@ -3,39 +3,44 @@ const signature = require('./signature');
 let handler = (req) => {
   if (verifyUser) {
     let token = signature.generate(req);
-    returnSuccess(token);
+    return success(token);
   } else {
-    returnFail();
+    return fail();
   }
 };
 
-let status = (params) => {
-  let token = params.token,
-      verified = false,
-      status = 401;
+let status = (req) => {
+  let token = req.headers.authorization,
+      verified = false;
 
-  if (token.length === 1) {
+  if (token && token.length === 1) {
     verified = signature.verify(token);
   }
 
   if (verified) {
-    returnSuccess(token);
+    return success(token);
   } else {
-    returnFail();
+    return fail();
   }
 };
 
-let returnSuccess = (token) => {
-  res.writeHead(200, {
-    'content-type': 'application/json',
-    'authorization': token
-  });
+let success = (token) => {
+  return {
+    status: 200, 
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer: ${token}`
+    }
+  }
 };
 
-let returnFail = () => {
-  res.writeHead(401, {
-    'content-type': 'application/json'
-  });
+let fail = () => {
+  return {
+    status: 401, 
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 };
 
 let verifyUser = () => {

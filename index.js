@@ -12,8 +12,11 @@ http
       .on('error', (err) => {
         console.error(err);
       })
+      .on('data', (chunk) => {
+        body.push(chunk);
+      })
       .on('end', () => {
-        let requestedURL = new URL(req.url, `http://${req.headers.host}`), // this sucks
+        let requestedURL = new URL(req.url, `http://${req.headers.host}`),
             endpoint = requestedURL.pathname,
             params = requestedURL.searchParams;
 
@@ -27,16 +30,19 @@ http
           case '/auth':
             switch (req.method) {
               case 'POST':
-                auth.handler(req, res);
+                result = auth.handler(req);
                 break;
               case 'GET':
-                auth.status(parms);
+                result = auth.status(req);
                 break;
             }
             break;
         }
+        body = Buffer.from(JSON.stringify(result));
 
-        res.end();
+        res.writeHead(result.status, result.headers)
+
+        res.end(body);
       });
     })
     .listen(3000, () => {
