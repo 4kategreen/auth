@@ -12,12 +12,16 @@ http
       .on('error', (err) => {
         console.error(err);
       })
+      .on('data', (chunk) => {
+        body.push(chunk);
+      })
       .on('end', () => {
-        let requestedURL = new URL(req.url, `http://${req.headers.host}`), // this sucks
+        let requestedURL = new URL(req.url, `http://${req.headers.host}`),
             endpoint = requestedURL.pathname,
             params = requestedURL.searchParams;
 
         console.log(`${req.method} request received to ${endpoint}`);
+        body = Buffer.concat(body).toString();
 
         res.on('error', (err) => {
           console.error(err);
@@ -27,14 +31,16 @@ http
           case '/auth':
             switch (req.method) {
               case 'POST':
-                auth.handler(req, res);
+                result = auth.handler(req, res);
                 break;
               case 'GET':
-                auth.status(parms);
+                result = auth.status(req, res);
                 break;
             }
             break;
         }
+
+        res.writeHead(result.status, result.headers)
 
         res.end();
       });
