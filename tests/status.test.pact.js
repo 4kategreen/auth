@@ -32,7 +32,7 @@ describe('The API', () => {
         .then((response) => {
           expect(response).toEqual({"status":401,"headers":{"Content-Type":"application/json"}});
         })
-        .then(done)
+        .then(done())
         .catch((err) => {
           console.error(err.message);
         });
