@@ -12,7 +12,7 @@ describe('The API', () => {
         withRequest: {
           method:  'GET',
           path: '/auth',
-          query:  'token=asdfjkl;',
+          query:  'token=asdfjkl',
           headers: {
             Accept: 'application/json'
           }
@@ -31,7 +31,7 @@ describe('The API', () => {
 
     // add expectations
     test('Should error when the token is bad', (done) => {
-      api.getStatus(url, { token: 'asdfjkl;' })
+      api.getStatus(url, { token: 'asdfjkl' })
         .then((response) => {
           expect(response).toEqual({});
         })

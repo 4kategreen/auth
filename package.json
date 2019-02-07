@@ -18,6 +18,9 @@
     "url": "https://github.com/4kategreen/auth/issues"
   },
   "homepage": "https://github.com/4kategreen/auth#readme",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "crypto-js": "^3.1.9-1"
   },
