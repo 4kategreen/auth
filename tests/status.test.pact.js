@@ -19,7 +19,7 @@ describe('The API', () => {
         },
         willRespondWith: {
           status: 401,
-          body: '{"status":401,"headers":{"Content-Type":"application/json"}}'
+          body: {"status":401,"headers":{"Content-Type":"application/json"}}
         }
       };
 
@@ -30,7 +30,7 @@ describe('The API', () => {
     test('Should error when the token is bad', (done) => {
       api.getStatus(url, 'asdfjkl')
         .then((response) => {
-          expect(response).toEqual('{"status":401,"headers":{"Content-Type":"application/json"}}');
+          expect(response).toEqual({"status":401,"headers":{"Content-Type":"application/json"}});
         })
         .then(done)
         .catch((err) => {
