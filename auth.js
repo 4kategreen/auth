@@ -11,8 +11,7 @@ let handler = () => {
 
 let status = (params) => {
   let token = params.token,
-      verified = false,
-      status = 401;
+      verified = false;
 
   if (token && token.length === 1) {
     verified = signature.verify(token);
