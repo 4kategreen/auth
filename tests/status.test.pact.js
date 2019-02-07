@@ -12,17 +12,14 @@ describe('The API', () => {
         withRequest: {
           method:  'GET',
           path: '/auth',
-          query:  'token=asdfjkl',
           headers: {
-            Accept: 'application/json'
+            Accept: 'application/json',
+            Authorization: 'Bearer asdfjkl'
           }
         },
         willRespondWith: {
           status: 401,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: {}
+          body: '{"status":401,"headers":{"Content-Type":"application/json"}}'
         }
       };
 
@@ -31,13 +28,13 @@ describe('The API', () => {
 
     // add expectations
     test('Should error when the token is bad', (done) => {
-      api.getStatus(url, { token: 'asdfjkl' })
+      api.getStatus(url, 'asdfjkl')
         .then((response) => {
-          expect(response).toEqual({});
+          expect(response).toEqual('{"status":401,"headers":{"Content-Type":"application/json"}}');
         })
         .then(done)
         .catch((err) => {
-          console.error(err);
+          console.error(err.message);
         });
     });
   });  
