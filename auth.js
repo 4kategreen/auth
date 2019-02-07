@@ -1,6 +1,6 @@
 const signature = require('./signature');
 
-let handler = () => {
+let handler = (req) => {
   if (verifyUser) {
     let token = signature.generate(req);
     return success(token);
@@ -9,8 +9,8 @@ let handler = () => {
   }
 };
 
-let status = (params) => {
-  let token = params.token,
+let status = (req) => {
+  let token = req.headers.authorization,
       verified = false;
 
   if (token && token.length === 1) {
@@ -28,8 +28,8 @@ let success = (token) => {
   return {
     status: 200, 
     headers: {
-      'content-type': 'application/json',
-      'authorization': token
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer: ${token}`
     }
   }
 };
@@ -38,7 +38,7 @@ let fail = () => {
   return {
     status: 401, 
     headers: {
-      'content-type': 'application/json'
+      'Content-Type': 'application/json'
     }
   };
 };

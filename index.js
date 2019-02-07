@@ -21,7 +21,6 @@ http
             params = requestedURL.searchParams;
 
         console.log(`${req.method} request received to ${endpoint}`);
-        body = Buffer.concat(body).toString();
 
         res.on('error', (err) => {
           console.error(err);
@@ -31,18 +30,19 @@ http
           case '/auth':
             switch (req.method) {
               case 'POST':
-                result = auth.handler(req, res);
+                result = auth.handler(req);
                 break;
               case 'GET':
-                result = auth.status(req, res);
+                result = auth.status(req);
                 break;
             }
             break;
         }
+        body = Buffer.from(JSON.stringify(result));
 
         res.writeHead(result.status, result.headers)
 
-        res.end();
+        res.end(body);
       });
     })
     .listen(3000, () => {
