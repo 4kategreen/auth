@@ -16,9 +16,8 @@ http
         body.push(chunk);
       })
       .on('end', () => {
-        let requestedURL = new URL(req.url, `http://${req.headers.host}`),
-            endpoint = requestedURL.pathname,
-            params = requestedURL.searchParams;
+        let requestedURL = new URL(req.url, `http://${req.headers.host}`)
+            endpoint = requestedURL.pathname;
 
         console.log(`${req.method} request received to ${endpoint}`);
 

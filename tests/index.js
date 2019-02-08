@@ -1,11 +1,10 @@
 const axios = require('axios');
 
 let getStatus = (endpoint, token) => {
-  const url = endpoint;
 
   return axios({
     method: 'get',
-    url: `${url}/auth`,
+    url: `${endpoint}/auth`,
     headers: { 
       'Accept': 'application/json', 
       'Authorization': `Bearer ${token}` }
@@ -21,6 +20,10 @@ let getStatus = (endpoint, token) => {
     }
   });
 };
+
+let checkCreds = (endpoint) => {
+
+}
 
 module.exports = {
   getStatus: getStatus
