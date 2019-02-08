@@ -1,45 +1,53 @@
-let handler = (req, res) => {
-  return {
-    body: '<p>Make new token</p>',
-    status: 200
+const signature = require('./signature');
+
+let handler = (req) => {
+  if (verifyUser) {
+    let token = signature.generate(req);
+    return success(token);
+  } else {
+    return fail();
   }
 };
 
-let status = (params) => {
-  let token = params.getAll('token');
-  if (token.length === 1) {
-    // query the database
+let status = (req) => {
+  let token = req.headers.authorization,
+      verified = false;
+
+  if (token && token.length === 1) {
+    verified = signature.verify(token);
+  }
+
+  if (verified) {
+    return success(token);
   } else {
-    // error ffs
+    return fail();
   }
+};
+
+let success = (token) => {
   return {
-    body: `<p>Verify existing token: ${params}</p>`,
-    status: 200
+    status: 200, 
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer: ${token}`
+    }
   }
+};
+
+let fail = () => {
+  return {
+    status: 401, 
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+};
+
+let verifyUser = () => {
+
 };
 
 module.exports = {
   handler: handler,
   status: status
-}
-
-/***
-POST /auth
-purpose: given valid login credentials, create token
-  compare against database
-  return true
-    create token
-    send token
-    200
-  return false
-    401
-GET /auth
-purpose: compare token to db so app can verify login
-  assess token
-  return true
-    continue on your way
-    200
-  return false
-    redirect
-    401
-***/
+};

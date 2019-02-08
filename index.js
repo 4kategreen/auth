@@ -1,5 +1,5 @@
-const http =        require('http'),
-      url =         require('url');
+const http =  require('http'),
+      url =   require('url');
 
 const auth =  require('./auth');
 
@@ -21,12 +21,6 @@ http
             params = requestedURL.searchParams;
 
         console.log(`${req.method} request received to ${endpoint}`);
-        body = Buffer.concat(body),toString();
-
-        let result = {
-          body:`<h2>${req.method} ${endpoint}</h2>`,
-          status: 404
-        }
 
         res.on('error', (err) => {
           console.error(err);
@@ -36,25 +30,19 @@ http
           case '/auth':
             switch (req.method) {
               case 'POST':
-                result = auth.handler(req, res);
+                result = auth.handler(req);
                 break;
               case 'GET':
-                result = auth.status(params);
-                break;
-              case 'DELETE':
-                result = auth.logout(req, res);
+                result = auth.status(req);
                 break;
             }
             break;
         }
+        body = Buffer.from(JSON.stringify(result));
 
-        res.writeHead(result.status, {'Content-Type': 'text/html'});
+        res.writeHead(result.status, result.headers)
 
-        // model return headers in the browser for now.
-        if (result.status < 300) {
-          res.write(result.body);
-        }
-        res.end();
+        res.end(body);
       });
     })
     .listen(3000, () => {
