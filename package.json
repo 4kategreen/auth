@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch",
-    "pact": "export NODE_ENV=pact && jest --testRegex \"/*(.test.pact.js)\" --runInBand --setupFiles ./tests/pactSetup.js --setupFilesAfterEnv ./tests/pactTestWrapper.js"
+    "test:pact": "NODE_ENV=pact jest --testRegex \"/*(.test.pact.js)\" --runInBand --setupFiles ./tests/pactSetup.js --setupFilesAfterEnv ./tests/pactTestWrapper.js",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
