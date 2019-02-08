@@ -1,4 +1,5 @@
-const axios = require('axios');
+const axios = require('axios'),
+      creds = require('../config').creds;
 
 let getStatus = (endpoint, token) => {
 
@@ -16,15 +17,37 @@ let getStatus = (endpoint, token) => {
     if (err.response) {
       return err.response.data;
     } else {
-      console.error(error.message);
+      console.error(err.message);
     }
   });
 };
 
-let checkCreds = (endpoint) => {
+let checkCreds = (endpoint, user, pass) => {
 
-}
+  return axios({
+    method: 'post',
+    url: `${endpoint}/auth`,
+    headers: {
+      'Accept': 'application/json',
+    },
+    data: {
+      credentials: {
+        username: creds.kate.username,
+        password: creds.kate.password
+      }
+    }
+  }).then((response) => {
+    return response;
+  }).catch((err) => {
+    if (err.response) {
+      return err.response.data;
+    } else {
+      console.error(err.message)
+    }
+  });
+};
 
 module.exports = {
+  checkCreds: checkCreds,
   getStatus: getStatus
 };
