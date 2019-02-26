@@ -1,22 +1,25 @@
-const signature = (() => {
-  const { readFileSync } = require('fs');
-  const publicKey = readFileSync('id_rsa.pub');
-  const privateKey = readFileSync('id_rsa');
-  const signature = require('./signature')({publicKey: publicKey, privateKey: privateKey});
-  return signature;
-})();
+const allCreds = require('./config').creds,
+      signature = (() => {
+        const { readFileSync } = require('fs');
+        const publicKey = readFileSync('id_rsa.pub');
+        const privateKey = readFileSync('id_rsa');
+        const signature = require('./signature')({publicKey: publicKey, privateKey: privateKey});
+        return signature;
+      })();
 
-let handler = (req) => {
-  if (verifyUser) {
-    let token = signature.generate(req);
-    return success(token);
-  } else {
-    return fail();
+let handler = (creds) => {
+  result = false;
+
+  if (verifyUser(creds)) {
+    let token = signature.generate(creds);
+    result = token;
   }
+
+  return result;
 };
 
-let status = (req) => {
-  let token = req.headers.authorization,
+let status = (headers) => {
+  let token = headers.authorization,
       verified = false;
 
   if (token && token.length === 1) {
@@ -24,11 +27,11 @@ let status = (req) => {
   }
 
   if (verified) {
-    return success(token);
-  } else {
-    return fail();
+    verified = token;
   }
-};
+
+  return verified;
+}
 
 let servePublicKey = (req) => {
   return {
@@ -37,31 +40,20 @@ let servePublicKey = (req) => {
   };
 }
 
-let success = (token) => {
-  return {
-    status: 200, 
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer: ${token}`
+let verifyUser = (creds) => {
+  users = Object.keys(allCreds);
+
+  if (users.includes(creds.username)) {
+    // will actually compare encoded versions eventually
+    if (allCreds[creds.username].password === creds.password) {
+      return true;
     }
   }
-};
-
-let fail = () => {
-  return {
-    status: 401, 
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-};
-
-let verifyUser = () => {
-
 };
 
 module.exports = {
   handler: handler,
   servePublicKey: servePublicKey,
-  status: status
+  status: status,
+  verifyUser: verifyUser
 };

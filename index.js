@@ -13,11 +13,12 @@ http
         console.error(err);
       })
       .on('data', (chunk) => {
-        body.push(chunk);
+        body.push(chunk.toString());
       })
       .on('end', () => {
         let requestedURL = new URL(req.url, `http://${req.headers.host}`)
-            endpoint = requestedURL.pathname;
+            endpoint = requestedURL.pathname,
+            status = '404'; // this is a value in place of a proper body
 
         console.log(`${req.method} request received to ${endpoint}`);
 
@@ -25,14 +26,42 @@ http
           console.error(err);
         });
 
+        let success = (token) => {
+          status = '200';
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer: ${token}`
+          })
+        };
+
+        let fail = () => {
+          status = '401';
+          res.writeHead(401, {
+            'Content-Type': 'application/json'
+          })
+        };
+
         switch (endpoint) {
           case '/auth':
             switch (req.method) {
               case 'POST':
-                result = auth.handler(req);
+                body = JSON.parse(body)
+                let newToken = auth.handler(body.credentials);
+
+                if (newToken) {
+                  success(newToken);
+                } else {
+                  fail();
+                }
                 break;
               case 'GET':
-                result = auth.status(req);
+                let existingToken = auth.status(headers);
+
+                if (existingToken) {
+                  success(existingToken);
+                } else{
+                  fail();
+                }
                 break;
             }
             break;
@@ -44,9 +73,7 @@ http
             }
             break;
         }
-        body = Buffer.from(JSON.stringify(result));
-
-        res.writeHead(result.status, result.headers)
+        body = Buffer.from(status);
 
         res.end(body);
       });
