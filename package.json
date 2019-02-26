@@ -4,6 +4,7 @@
   "description": "jwt auth system",
   "main": "index.js",
   "scripts": {
+    "generate:key-pair": "node util/generateKeyPair.js",
     "test": "jest",
     "test:pact": "NODE_ENV=pact jest --testRegex \"/*(.test.pact.js)\" --runInBand --setupFiles ./tests/pactSetup.js --setupFilesAfterEnv ./tests/pactTestWrapper.js",
     "test:watch": "jest --watch"
@@ -21,9 +22,7 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "dependencies": {
-    "crypto-js": "^3.1.9-1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@pact-foundation/pact": "^7.2.0",
     "axios": "^0.18.0",

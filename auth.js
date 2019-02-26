@@ -1,4 +1,10 @@
-const signature = require('./signature');
+const signature = (() => {
+  const { readFileSync } = require('fs');
+  const publicKey = readFileSync('id_rsa.pub');
+  const privateKey = readFileSync('id_rsa');
+  const signature = require('./signature')({publicKey: publicKey, privateKey: privateKey});
+  return signature;
+})();
 
 let handler = (req) => {
   if (verifyUser) {
@@ -23,6 +29,13 @@ let status = (req) => {
     return fail();
   }
 };
+
+let servePublicKey = (req) => {
+  return {
+    status: 200,
+    publicKey: String(signature.publicKey)
+  };
+}
 
 let success = (token) => {
   return {
@@ -49,5 +62,6 @@ let verifyUser = () => {
 
 module.exports = {
   handler: handler,
+  servePublicKey: servePublicKey,
   status: status
 };
