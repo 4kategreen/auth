@@ -37,6 +37,13 @@ http
                 break;
             }
             break;
+          case '/auth/public_key':
+            switch (req.method) {
+              case 'GET':
+                result = auth.servePublicKey(req);
+                break;
+            }
+            break;
         }
         body = Buffer.from(JSON.stringify(result));
 
