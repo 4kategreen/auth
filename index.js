@@ -18,7 +18,7 @@ http
       .on('end', () => {
         let requestedURL = new URL(req.url, `http://${req.headers.host}`)
             endpoint = requestedURL.pathname,
-            status = '404'; // this is a value in place of a proper body
+            status = '404';
 
         console.log(`${req.method} request received to ${endpoint}`);
 
@@ -34,9 +34,9 @@ http
           })
         };
 
-        let fail = () => {
-          status = '401';
-          res.writeHead(401, {
+        let fail = (code) => {
+          status = code.toString();
+          res.writeHead(code, {
             'Content-Type': 'application/json'
           })
         };
@@ -51,7 +51,7 @@ http
                 if (newToken) {
                   success(newToken);
                 } else {
-                  fail();
+                  fail(401);
                 }
                 break;
               case 'GET':
@@ -60,7 +60,7 @@ http
                 if (existingToken) {
                   success(existingToken);
                 } else{
-                  fail();
+                  fail(401);
                 }
                 break;
             }
@@ -71,6 +71,9 @@ http
                 result = auth.servePublicKey(req);
                 break;
             }
+            break;
+          default:
+            fail(404);
             break;
         }
         body = Buffer.from(status);

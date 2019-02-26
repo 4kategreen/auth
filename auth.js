@@ -41,7 +41,7 @@ let servePublicKey = (req) => {
 }
 
 let verifyUser = (creds) => {
-  users = Object.keys(allCreds);
+  let users = Object.keys(allCreds);
 
   if (users.includes(creds.username)) {
     // will actually compare encoded versions eventually
