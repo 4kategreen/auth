@@ -1,4 +1,11 @@
-const { Pact } = require('@pact-foundation/pact');
+const { Pact } = require('@pact-foundation/pact'),
+      signature = (() => {
+        const { readFileSync } = require('fs');
+        const publicKey = readFileSync('./id_rsa.pub');
+        const privateKey = readFileSync('./id_rsa');
+        const signature = require('../signature')({publicKey: publicKey, privateKey: privateKey});
+        return signature;
+      })();
 
 const api = require('./index'),
       creds = require('../config').creds;
@@ -34,7 +41,7 @@ describe('Auth API', () => {
 
       api.getStatus(url, 'asdfjkl')
         .then((response) => {
-          expect(response).toEqual({"status":401,"headers":{"Content-Type":"application/json"}});
+          expect(response).toEqual(401);
           done();
         })
         .catch((err) => {
@@ -44,7 +51,7 @@ describe('Auth API', () => {
   }); 
 
   describe('Get Token', () => {
-    let token = creds.kate.expectedToken;
+    let token = signature.generate(creds.kate);
     
     beforeEach(() => {
       const interaction = {
@@ -72,15 +79,12 @@ describe('Auth API', () => {
       }
     });
 
-    test.skip('Should return a token with proper credentials', (done) => {
+    test('Should return a token with proper credentials', (done) => {
       expect.assertions(1);
 
       api.checkCreds(url, creds.username, creds.password)
         .then((response) => {
-          expect(response).toEqual({"status":200,"headers": {
-            "Accept": 'application/json',
-            "Authorization": `Bearer ${token}`
-          }})
+          expect(response.headers.authorization).toEqual(`Bearer: ${token}`)
           done();
         })
         .catch((err) => {
