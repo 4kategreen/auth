@@ -1,28 +1,43 @@
+const jsc = require('jsverify');
+
 const auth = require('./auth'),
-      signature = require('./signature'),
       allCreds = require('./config').creds;
+      
+let token = false;
 
 describe('handler', () => {
-  beforeEach(() => {
-  });
 
   test('should generate a token with a valid user', () => {
-    expect(auth.handler(allCreds.kate)).toEqual('token');
+    token = auth.handler(allCreds.kate);
+    expect(token).toBeTruthy();
   });
 
+  // this is dumb and there's probably a better way not using property testing
   test('should return false if the user is not valid', () => {
-    expect(auth.handler({ username: 'fakeuser', password: 'no' })).toBeFalsy();
-  })
+    let failedCreds = jsc.forall("json", (creds) => {
+      return auth.handler(creds);
+    });
+
+    jsc.throws(failedCreds);
+  });
 });
 
-describe.skip('status', () => {
-  test('should return false if token is missing or there are more than one tokens in the headerX')
-  test('should return true if signature.verify returns true');
-  test('should return false if signature.verfiy returns false');
+describe('status', () => {
+  test('should return true if signature.verify returns true', () => {
+    let header = { 'authorization': token };
+    expect(auth.status(header)).toEqual(token);
+  });
+
+  test('should return false if signature.verfiy returns false', () => {
+    let failedToken = jsc.forall("string", (fakeToken) => {
+      let header = { 'authorization': fakeToken}
+      return auth.handler(fakeToken);
+    });
+
+    jsc.throws(failedToken);
+  });
 });
 
 describe.skip('verifyUser', () => {
-  test('should verify user as matching a valid user and return true');
-  test('should return false if the username is not in the credential list');
-  test('should return false if the password does not match');
+  // seriously this is such a bs function right now why would i test it?
 })

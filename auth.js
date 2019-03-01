@@ -22,7 +22,7 @@ let status = (headers) => {
   let token = headers.authorization,
       verified = false;
 
-  if (token && token.length === 1) {
+  if (token) {
     verified = signature.verify(token);
   }
 
@@ -54,6 +54,5 @@ let verifyUser = (creds) => {
 module.exports = {
   handler: handler,
   servePublicKey: servePublicKey,
-  status: status,
-  verifyUser: verifyUser
+  status: status
 };
