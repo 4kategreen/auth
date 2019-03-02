@@ -11,15 +11,6 @@ describe('handler', () => {
     token = auth.handler(allCreds.kate);
     expect(token).toBeTruthy();
   });
-
-  // this is dumb and there's probably a better way not using property testing
-  test('should return false if the user is not valid', () => {
-    let failedCreds = jsc.forall("json", (creds) => {
-      return auth.handler(creds);
-    });
-
-    jsc.throws(failedCreds);
-  });
 });
 
 describe('status', () => {
