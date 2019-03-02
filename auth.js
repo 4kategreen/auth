@@ -43,7 +43,7 @@ let servePublicKey = (req) => {
 let verifyUser = (creds) => {
   let users = Object.keys(allCreds);
 
-  if (users.includes(creds.username)) {
+  if (creds && users.includes(creds.username)) {
     // will actually compare encoded versions eventually
     if (allCreds[creds.username].password === creds.password) {
       return true;

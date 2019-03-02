@@ -29,12 +29,14 @@ describe('status', () => {
   });
 
   test('should return false if signature.verfiy returns false', () => {
-    let failedToken = jsc.forall("string", (fakeToken) => {
-      let header = { 'authorization': fakeToken}
-      return auth.handler(fakeToken);
+    let failedToken = jsc.forall("json", (fakePayload) => {
+      let fakeToken = auth.handler(fakePayload);
+      let header = { 'authorization': fakeToken }
+
+      return !auth.status(fakeToken);
     });
 
-    jsc.throws(failedToken);
+    jsc.assert(failedToken);
   });
 });
 
