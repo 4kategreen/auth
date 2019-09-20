@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "generate:key-pair": "node util/generateKeyPair.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "test:pact": "NODE_ENV=pact jest --testRegex \"/*(.test.pact.js)\" --runInBand --setupFiles ./tests/pactSetup.js --setupFilesAfterEnv ./tests/pactTestWrapper.js",
     "test:mutate": "npx stryker run",
     "test:watch": "jest --watch"
@@ -29,7 +29,7 @@
     "@stryker-mutator/core": "^1.0.3",
     "@stryker-mutator/javascript-mutator": "^1.0.3",
     "@stryker-mutator/jest-runner": "^1.0.3",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "jest": "^24.1.0",
     "jsverify": "^0.8.4"
   }
