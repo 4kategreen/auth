@@ -29,7 +29,7 @@
     "@stryker-mutator/core": "^1.0.3",
     "@stryker-mutator/javascript-mutator": "^1.0.3",
     "@stryker-mutator/jest-runner": "^1.0.3",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "jest": "^24.1.0",
     "jsverify": "^0.8.4"
   }
